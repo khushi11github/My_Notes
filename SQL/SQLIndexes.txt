@@ -1,0 +1,8 @@
+INDEXES TYPES
+We have different types of indexes in database for different purposes
+
+1.By the structure(how it organising the data)
+-> clustered
+->non clustered
+2.
+3.

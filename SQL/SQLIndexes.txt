@@ -4,5 +4,130 @@ We have different types of indexes in database for different purposes
 1.By the structure(how it organising the data)
 -> clustered
 ->non clustered
-2.
-3.
+
+2.Storage( how the data is stored physically in database)
+->Rowstore Index
+->ColumnStore Index
+
+3.Functions
+->unique Index
+->Filtered Index
+Each Index type has its own strength but as well there is always a tradeoff. some might improve their read performance, other might improve theigh insert, and update operations.
+
+
+
+HEAP STRUCTURE
+----------------
+
+
+WHAT HAPPENS TO DATABASE INDEX WHEN U DONT CREATE ANY INDEX. 
+
+IT is going to store data on datafile on a disk. data can be stored in blocks called pages so its not like rows and coloumn.
+data is stored inside data files and inside th data files we have pages
+
+
+PAGE-- THE SMALLEST UNIT OF DATA STORAGE IN A DATABASE(8KB)
+IT CAN STORE ANYTHING(Data, metadata,indexes etc)
+
+
+DATA PAGE
+-----------
+header  1(fileid):120(unique no for each page)   
+-----------
+ROW1 | 1,bob, usa
+------------
+ROW2 | 2,anna,germany
+------------
+
+    FREE SPACE
+
+--------
+offset array( quick array index for the rows stored inside this page.it keeps track of
+where each rows begin so sql can easily locate specific rows without having sql like scanning the entire page )
+IT TELLS sql server where each roes begins within that page
+--------
+
+
+
+data is not stored at all(because we are not using any indexes)
+
+
+SO WE CALLED THIS STRUCTURE AS HEAP STRUCTURE.
+
+this is quick in inserting data but ofcourse finding something is slow.
+fast writes bad reads.
+
+
+In order to find the data sql will scan all the data pages.scans entire table page by page rows by rows in order to find data.
+(FULL TABLE SCAN)
+Searching through heap structure is can be very very slow.
+
+THATS WHY WE NEED SQL IN DATABASES
+
+1.CLUSTERED INDEX.
+SQL GONNA physically sort all the data based on the column id. so the rows
+rearrage in each page from lowest to highest value.
+DATA PAGE 
+1
+2
+3
+
+DATA PAGE 2
+4
+5
+6
+
+B-TREE
+is balanced tree it is hierarchal structure that store data as upside down
+                           ROOT NODE
+                              |
+                              |
+                              |
+--------------------------------------------------------------------
+|                                                                   |
+INTERMEDIATE node                                            Intermediate Node
+     |                                                              |
+|           |                                                |             |
+Leaf node   LN                                             Leaf Node      Leaf Node
+
+
+
+Once SQL construct b-tree it is going to be very easy for sql to navigate through BTree in order to find specific operation
+
+THE leaf node at the end of B-tree for clustered index contains the actual data, the data pages after that sql can start building the intermediate nodes and here the data 
+base goinng to use different types of pages, we have that index pages. so in the index page we cannot find the actual data but instead the index page stores key value pair that contains a pointer to another index page or to data page
+
+
+
+INDEX PAGE
+-----------
+1:200
+____________
+
+KEY(ID)--->(1:100) {id OF DATA PAGE, VALYE POINTER TO DATA PAGE)
+
+____________
+
+
+
+
+2. Non clustered Index.
+
+SQLwill not touch anything physically.
+It statred building index page
+SQl going to store in the key , customer id and now the value witt be the address where exactly the row is stores
+
+INDEX PAGE
+---------
+1:200
+----------
+1(customer id, column)---> fieldId:page number:Row offset
+
+2--->1:102:96-------------------------------------------------->datapge exacr row.
+3--->1:101:140
+4--->1:102:140
+_________________
+
+
+it maps the pointer for each customer id that we have inside our table so we have multiple index pages pointing to our data page so as u can see we have large number of pointer. the data inside the index age is ofcourse sorted but inside the data pages it left as it is and now inde
+x pages which have data that has the rows identifier gonna be store at leaf level of b tree

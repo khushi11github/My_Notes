@@ -131,3 +131,21 @@ _________________
 
 it maps the pointer for each customer id that we have inside our table so we have multiple index pages pointing to our data page so as u can see we have large number of pointer. the data inside the index age is ofcourse sorted but inside the data pages it left as it is and now inde
 x pages which have data that has the rows identifier gonna be store at leaf level of b tree
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+both clustered and non-clustered indexes in SQL Server maintain a B+ tree structure.
+In a clustered index, the B+ tree consists of a root level, intermediate levels, and a leaf level. The root and intermediate levels contain index keys and pointers to lower-level pages. The leaf level contains the actual table data rows, organized by the clustered index key.
+In a non-clustered index, SQL Server also maintains a B+ tree with root, intermediate, and leaf levels. The root and intermediate levels contain keys and pointers, while the leaf level contains the indexed column values and row locators that help SQL Server locate the actual table rows.
+Therefore, the main difference is that the clustered index contains the actual table data at its leaf level, whereas the non-clustered index contains index entries and references to the actual data.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
